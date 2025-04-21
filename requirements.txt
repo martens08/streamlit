@@ -1,5 +1,3 @@
-nba_api
-datetime
-time
-smtplib
 streamlit
+nba_api
+pytz
