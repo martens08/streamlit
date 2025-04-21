@@ -336,7 +336,7 @@ def get_general_rate(stats,pbp):
     elif dif >= 13 and dif <= 20:
         difference = mark[2]
 
-    elif dif > 20:
+    elif dif > 20 and dif <= 30:
         difference = mark[1]
     
     elif dif > 30:
