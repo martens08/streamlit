@@ -7,6 +7,7 @@ from nba_api.stats.endpoints import playoffpicture
 from nba_api.stats.endpoints import PlayByPlayV2
 
 
+
 #ACTUAL DATE
 from datetime import datetime, timedelta
 import time #add delay
@@ -68,6 +69,11 @@ message = create_message(games, final_rates, break_downs, last_night)
 #send_mail(message, last_night) 
 
 open_window(message)
+
+   
+
+    
+
 
    
 
