@@ -78,7 +78,7 @@ if go_on == True:
 
         time.sleep(3)  # Delay of 3 seconds between each request
 
-    message = create_message(games, final_rates, break_downs, last_night)
+    message = create_message(games, final_rates, break_downs, date)
 
     #send_mail(message, last_night) 
 
