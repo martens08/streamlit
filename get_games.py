@@ -15,8 +15,13 @@ from nba_functions import *
 last_night = datetime.now().date()- timedelta(days=1)
 three_days = datetime.now().date()- timedelta(days=3)
 
-selected_date = last_night
-# show the date picker
+with st.expander('Remember last three game days'):
+        selected_date = st.date_input(
+        "📅 Select a date:",
+        last_night,
+        min_value=three_days,
+        max_value=last_night
+        )# - timedelta(days=1)
 
 day_ofset = '0'
 date = selected_date 
@@ -79,13 +84,7 @@ if go_on == True:
 
     open_window(message)
 
-    with st.expander('Remember last three game days'):
-        selected_date = st.date_input(
-        "📅 Select a date:",
-        last_night,
-        min_value=three_days,
-        max_value=last_night
-        )# - timedelta(days=1)
+    
 
    
 
