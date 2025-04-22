@@ -6,71 +6,90 @@ from nba_api.stats.endpoints import boxscoresummaryv2
 from nba_api.stats.endpoints import playoffpicture
 from nba_api.stats.endpoints import PlayByPlayV2
 
-
-
-#ACTUAL DATE
+#DATE
 from datetime import datetime, timedelta
 import time #add delay
 
 from nba_functions import *
 
-last_night = (datetime.now() - timedelta(days=1)).date()
+last_night = datetime.now().date()- timedelta(days=1)
+three_days = datetime.now().date()- timedelta(days=3)
+
+selected_date = last_night
+# show the date picker
 
 day_ofset = '0'
-date = last_night 
+date = selected_date 
 league_ID = '00'
 
-scoreboard = scoreboardv2.ScoreboardV2(day_ofset, date, league_ID).get_dict()
+try:
+    scoreboard = scoreboardv2.ScoreboardV2(day_ofset, date, league_ID).get_dict()
+    go_on = True
 
-IDs = get_games_IDs(scoreboard)
+except KeyError as e:
+    st.error(f"⚠️ Data for this date is incomplete: {e}")
+    go_on = False
 
-stands = playoffpicture.PlayoffPicture().get_dict()
-standings = get_standings(stands)
-         
-games = []
-final_rates = []
-break_downs = []
+if go_on == True:
+    IDs = get_games_IDs(scoreboard)
 
-prop = [0.1, 0.1, 0.2, 0.6]
+    stands = playoffpicture.PlayoffPicture().get_dict()
+    standings = get_standings(stands)
+            
+    games = []
+    final_rates = []
+    break_downs = []
 
-for ID in IDs:
-    boxscore = boxscoretraditionalv2.BoxScoreTraditionalV2(game_id=ID).get_dict()
-    summary = boxscoresummaryv2.BoxScoreSummaryV2(game_id=ID).get_dict()
-    pbp = PlayByPlayV2(game_id=ID,end_period='4',start_period='4').get_dict()
-    
-    teams = get_game_stats(summary, boxscore)
-    players = get_players_stats(boxscore)
-    
-    t_rate = get_rates(teams,pbp,prop,players)
-    t_mult = get_teams_mult(teams,standings)#ok!
-    
-    game = teams[0]
-    games.append(game)
-    final_rate = round(t_rate[3]*t_mult,2)
+    prop = [0.1, 0.1, 0.2, 0.6]
 
-    if final_rate > 100:
-        final_rate = 100
+    for ID in IDs:
+        boxscore = boxscoretraditionalv2.BoxScoreTraditionalV2(game_id=ID).get_dict()
+        summary = boxscoresummaryv2.BoxScoreSummaryV2(game_id=ID).get_dict()
+        pbp = PlayByPlayV2(game_id=ID,end_period='4',start_period='4').get_dict()
+        
+        teams = get_game_stats(summary, boxscore)
+        players = get_players_stats(boxscore)
+        
+        t_rate = get_rates(teams,pbp,prop,players)
+        t_mult = get_teams_mult(teams,standings)#ok!
+        
+        game = teams[0]
+        games.append(game)
+        final_rate = round(t_rate[3]*t_mult,2)
 
-    final_rates.append(final_rate)
+        if final_rate > 100:
+            final_rate = 100
 
-    t_rate.append(t_mult)
-    t_rate.append(final_rate)
-    break_downs.append(t_rate)
+        final_rates.append(final_rate)
 
-    #print(game)
-    #print(t_rate)
-    #print(final_rate)
-      
+        t_rate.append(t_mult)
+        t_rate.append(final_rate)
+        break_downs.append(t_rate)
 
-    time.sleep(3)  # Delay of 3 seconds between each request
+        #print(game)
+        #print(t_rate)
+        #print(final_rate)
+        
 
-message = create_message(games, final_rates, break_downs, last_night)
+        time.sleep(3)  # Delay of 3 seconds between each request
 
-#send_mail(message, last_night) 
+    message = create_message(games, final_rates, break_downs, last_night)
 
-open_window(message)
+    #send_mail(message, last_night) 
+
+    open_window(message)
+
+    with st.expander('Remember last three game days'):
+        selected_date = st.date_input(
+        "📅 Select a date:",
+        last_night,
+        min_value=three_days,
+        max_value=last_night
+        )# - timedelta(days=1)
 
    
+
+    
 
     
 
