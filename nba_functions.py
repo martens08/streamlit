@@ -30,7 +30,7 @@ def create_message(games, final_rates, break_downs, last_night):
         i = final_rates.index(rate)
         game = games[i]
         message_1 += f'{n}. {game[0]} - {game[1]}\n\n'
-        message_2 += f'{n}. {game[0]} - {game[1]}\t\t {rate}\n\n'
+        message_2 += f'{n}. {game[0]} - {game[1]}:\t\t {rate}\n\n'
         break_down_2 += f'{game[0]} - {game[1]}\t{str(break_downs[i])}\n\n'
         n += 1
 
