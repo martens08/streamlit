@@ -10,15 +10,18 @@ def open_window(total):
 
     st.info("Start your day with last night's best NBA match spoilers-free.")
 
-    with st.expander("GAMES"):
-        st.write(total[0])
+    st.write(total[0])
+
+    with st.expander("Global Marks"):
+        st.write(total[2])
 
     with st.expander("Ratings Info"):
         st.write(total[1])
      
 
 def create_message(games, final_rates, break_downs, last_night):
-    message = f'Here the ranking of {last_night} NBA games:\n\n'
+    message_1 = f'Here the ranking of {last_night} NBA games:\n\n'
+    message_2 = f'Here {last_night} NBA games with their global evaluation:\n\n'
     rates_2 = sorted(final_rates, reverse=True)
     break_down_1 = ''
     break_down_2 = ''
@@ -26,17 +29,18 @@ def create_message(games, final_rates, break_downs, last_night):
     for rate in rates_2:
         i = final_rates.index(rate)
         game = games[i]
-        message += f'{n}. {game[0]} - {game[1]}\n\n'
+        message_1 += f'{n}. {game[0]} - {game[1]}\n\n'
+        message_2 += f'{n}. {game[0]} - {game[1]}\t\t {rate}\n\n'
         break_down_2 += f'{game[0]} - {game[1]}\t{str(break_downs[i])}\n\n'
         n += 1
 
     break_down_1 += f'\n\n\n More detail in case you want it:\n\n'
     break_down_1 += '[[shooting_1, playing_1, defense_1], team1_rate, [shooting_2, playing_2, defense_2], team2_rate'
-    break_down_1 += '[difference, total_p, chance_lead, p_mult, ot_mult, general_rate]'
-    break_down_1 += '[players, performace_mult, players_rate], mark, team_mult, final_rate]\n\n'
+    break_down_1 += '[players, performace_mult, players_rate]'
+    break_down_1 += '[difference, total_p, chance_lead, p_mult, ot_mult, general_rate], mark, team_mult, final_rate]\n\n'
 
     break_down_1 += break_down_2
-    total = [message, break_down_1]
+    total = [message_1, break_down_1, message_2]
 
     return total
    
